@@ -104,3 +104,32 @@ export async function get_tasks(pool: Pool): Promise<Task[]> {
         return [];
     }
 }
+
+export async function update_task(pool: Pool, task: Task): Promise<Boolean> {
+    const keys = Object.keys(task);
+    const values: string[] = [];
+
+    let id = null;
+    if (keys.includes('id')) {
+        id = task.id;
+    }
+    if (!id) return false;
+
+    if (keys.includes('title')) {
+        let val = `'${task.title}'` || `''`;
+        values.push(`title = ${val}`);
+    }
+    if (keys.includes('due_date')) {
+        let val = `'${task.due_date}'` || 'NULL';
+        values.push(`due_date = ${val}`);
+    }
+    if (keys.includes('is_completed')) {
+        let val = `${task.is_completed}` || 'false';
+        values.push(`is_completed = ${val}`);
+    }
+
+    if (values.length == 0) return false;
+    const result = await pool.query(`UPDATE public.tasks SET ${values.join(', ')} WHERE (id = ${id})`);
+    if (result.rowCount) return true;
+    return false;
+}

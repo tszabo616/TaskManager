@@ -8,6 +8,7 @@ import {
     delete_task,
     get_task,
     get_tasks,
+    update_task,
 } from './utils/tasks_utils';
 import { Task } from './types/Task';
 
@@ -67,6 +68,18 @@ app.post('/tasks', async (req: Request, res: Response) => {
         res.status(200).send('Task created');
     } else {
         res.status(400).send({ error: 'Task not created' });
+    }
+});
+
+// PUT update Task
+app.put('/tasks/:id', async (req: Request, res: Response) => {
+    const task: Task = req.body;
+    task.id = parseInt(req.params.id);
+    const result = await update_task(pool, task);
+    if (result) {
+        res.status(200).send('Task updated');
+    } else {
+        res.status(400).send({ error: 'Task not updated' });
     }
 });
 
