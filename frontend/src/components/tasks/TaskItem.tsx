@@ -1,21 +1,86 @@
 import PropTypes from 'prop-types';
+import { useContext, useState } from 'react';
+import type { FormEvent } from 'react';
 
+import { TasksContext } from '../../store/TasksContext';
 import classes from './TaskItem.module.css';
+import DeleteButton from '../buttons/DeleteButton';
+import ConfirmModal from '../modals/ConfirmModal';
+
+const env = import.meta.env;
 
 interface TaskItemProps {
+    id: number | string;
     title: string;
 }
 
-export default function TaskItem({ title = '' }: TaskItemProps) {
+export default function TaskItem({ id, title = '' }: TaskItemProps) {
+    const tasksCtx = useContext(TasksContext);
+    const [isConfirmModalShown, setIsConfirmModalShown] = useState(false);
+    const [isConfirmLoading, setIsConfirmLoading] = useState(false);
+    const [hasConfirmError, setHasConfirmError] = useState(false);
+
+    function handleDelete(e: FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        setIsConfirmLoading(true);
+        const url = `${env.VITE_BE_URL}/tasks/${id}`;
+        fetch(url, {
+            method: 'DELETE',
+        })
+            .then(res => {
+                if (res.ok) {
+                    tasksCtx?.removeTask(parseInt(`${id}`));
+                } else {
+                    return res.json().then(data => {
+                        const err = 'Error!';
+                        // setErrorMessage(err);
+                        if (data && data.error) {
+                            console.log(data);
+                            // setErrorMessage(data.error);
+                        }
+                        throw new Error(err);
+                    });
+                }
+            })
+            .catch(() => {
+                setIsConfirmLoading(false);
+            })
+            .finally(() => {
+                setIsConfirmLoading(false);
+                setIsConfirmModalShown(false);
+            });
+    }
+
+    function handleCloseConfirmModal() {
+        setIsConfirmModalShown(false);
+    }
+
+    function handleShowConfirmModal() {
+        setHasConfirmError(false);
+        setIsConfirmModalShown(true);
+    }
 
     return (
         <div className={classes.container}>
-            <p className={classes.title}>{title}</p>
+            {isConfirmModalShown && (
+                <ConfirmModal
+                    title='Delete Task'
+                    onClose={handleCloseConfirmModal}
+                    onSubmit={handleDelete}
+                    isLoading={isConfirmLoading}
+                    hasError={hasConfirmError}
+                />
+            )}
 
+            <p className={classes.title}>{title}</p>
+            <div className={classes.buttonsContainer}>
+                <DeleteButton onClick={handleShowConfirmModal} />
+            </div>
         </div>
     );
 }
 
 TaskItem.propTypes = {
+    id: PropTypes.number.isRequired,
     title: PropTypes.string,
 };

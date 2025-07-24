@@ -55,10 +55,22 @@ export const TasksContextProvider = ({
         []
     );
 
+    const removeTask = useCallback(
+        (id: number) => {
+            setTasks(
+                tasks.filter(function (task: Task) {
+                    return task.id != id;
+                })
+            );
+        },
+        [tasks]
+    );
+
     const contextValue = {
         tasks: tasks,
         getTasks: getTasks,
         getCurrentTasks: getCurrentTasks,
+        removeTask: removeTask,
     };
 
     return (

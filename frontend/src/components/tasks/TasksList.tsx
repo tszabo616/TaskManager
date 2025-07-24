@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 import TaskItem from './TaskItem';
 import classes from './TasksList.module.css';
 import { TasksContext } from '../../store/TasksContext';
-import Loading from '../../ui/Loading';
+import Loading from '../ui/Loading';
 import NoTasks from './NoTasks';
 
 export default function TasksList() {
@@ -29,6 +29,7 @@ export default function TasksList() {
                 ? tasks.map(el => (
                       <TaskItem
                           key={`task-item-${el.id}`}
+                          id={el.id || 0}
                           title={el.title || ''}
                       />
                   ))
