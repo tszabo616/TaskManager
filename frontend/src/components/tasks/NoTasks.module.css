@@ -1,0 +1,17 @@
+.container {
+    background-color: #333333;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 0 10px 10px 10px;
+    padding: 10px;
+}
+
+.title {
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}

@@ -1,0 +1,38 @@
+.loadingContainer {
+    margin: 0 auto;
+    padding: 0;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    min-height: 45px;
+}
+
+.loading {
+    border: 6px dashed #255DC5;
+    border-radius: 50%;
+    width: 23px;
+    height: 23px;
+    animation: spin 1.75s linear infinite;
+    position: absolute;
+}
+
+.loadingReverse {
+    border: 6px dashed #255DC5;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    animation: spinReverse 1.75s linear infinite;
+    position: absolute;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes spinReverse {
+    0% { transform: rotate(360deg); }
+    100% { transform: rotate(0deg); }
+}
