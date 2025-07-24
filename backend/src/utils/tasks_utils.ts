@@ -38,6 +38,22 @@ export async function init_tasks_table(pool: Pool) {
     }
 }
 
+export async function delete_task(
+    pool: Pool,
+    id: number | string
+): Promise<Boolean> {
+    try {
+        const result = await pool.query(
+            `DELETE FROM public.tasks WHERE (id = ${id})`
+        );
+        const rows = result.rowCount;
+        if (rows) return true;
+        return false;
+    } catch (err) {
+        return false;
+    }
+}
+
 export async function get_task(
     pool: Pool,
     id: number | string

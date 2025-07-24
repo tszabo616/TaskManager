@@ -2,7 +2,12 @@ import cors from 'cors';
 import express, { Request, Response } from 'express';
 import { Pool } from 'pg';
 
-import { init_tasks_table, get_task, get_tasks } from './utils/tasks_utils';
+import {
+    init_tasks_table,
+    delete_task,
+    get_task,
+    get_tasks,
+} from './utils/tasks_utils';
 import { Task } from './types/Task';
 
 const app = express();
@@ -27,6 +32,16 @@ const pool = new Pool({
     idleTimeoutMillis: 30000,
 });
 
+// DELETE a single Task by ID
+app.delete('/tasks/:id', async (req: Request, res: Response) => {
+    const result: Boolean = await delete_task(pool, req.params.id);
+    if (result) {
+        res.status(200).send('Task deleted');
+    } else {
+        res.status(404).send({ error: 'Task not found' });
+    }
+});
+
 // GET all Tasks
 app.get('/tasks', async (req: Request, res: Response) => {
     const tasks: Task[] = await get_tasks(pool);
@@ -45,7 +60,7 @@ app.get('/tasks/:id', async (req: Request, res: Response) => {
 
 // Handle request for non-existent routes
 app.use((req, res, next) => {
-    res.status(404).send('Route not found');
+    res.status(404).send({ error: 'Route not found' });
 });
 
 // Start the server
