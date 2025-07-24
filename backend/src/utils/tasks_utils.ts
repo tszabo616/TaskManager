@@ -38,6 +38,22 @@ export async function init_tasks_table(pool: Pool) {
     }
 }
 
+export async function get_task(
+    pool: Pool,
+    id: number | string
+): Promise<Task | null> {
+    try {
+        const result = await pool.query(
+            `SELECT * FROM public.tasks WHERE (id = ${id}) LIMIT 1`
+        );
+        const rows = result.rows;
+        if (rows) return rows[0];
+        return null;
+    } catch (err) {
+        return null;
+    }
+}
+
 export async function get_tasks(pool: Pool): Promise<Task[]> {
     try {
         const result = await pool.query(
