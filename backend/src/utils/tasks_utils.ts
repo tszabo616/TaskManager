@@ -38,6 +38,30 @@ export async function init_tasks_table(pool: Pool) {
     }
 }
 
+export async function create_task(pool: Pool, task: Task): Promise<Boolean> {
+    const keys = Object.keys(task);
+    const columns: string[] = [];
+    const values: string[] = [];
+
+    if (keys.includes('title')) {
+        columns.push('title');
+        values.push(`'${task.title}'` || `''`);
+    }
+    if (keys.includes('due_date')) {
+        columns.push('due_date');
+        values.push(`'${task.due_date}'` || 'NULL');
+    }
+    if (keys.includes('is_completed')) {
+        columns.push('is_completed');
+        values.push(`${task.is_completed}` || 'false');
+    }
+
+    if (columns.length == 0) return false;
+    const result = await pool.query(`INSERT INTO public.tasks (${columns.join(', ')}) VALUES (${values.join(', ')})`);
+    if (result.rowCount) return true;
+    return false;
+}
+
 export async function delete_task(
     pool: Pool,
     id: number | string

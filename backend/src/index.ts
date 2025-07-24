@@ -4,6 +4,7 @@ import { Pool } from 'pg';
 
 import {
     init_tasks_table,
+    create_task,
     delete_task,
     get_task,
     get_tasks,
@@ -55,6 +56,17 @@ app.get('/tasks/:id', async (req: Request, res: Response) => {
         res.json(task);
     } else {
         res.status(404).send({ error: 'Task not found' });
+    }
+});
+
+// POST new Task
+app.post('/tasks', async (req: Request, res: Response) => {
+    const task: Task = req.body;
+    const result = await create_task(pool, task);
+    if (result) {
+        res.status(200).send('Task created');
+    } else {
+        res.status(400).send({ error: 'Task not created' });
     }
 });
 
