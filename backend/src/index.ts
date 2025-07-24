@@ -1,10 +1,9 @@
 import cors from 'cors';
-import express from 'express';
+import express, { Request, Response } from 'express';
 import { Pool } from 'pg';
 
-import {
-    init_tasks_table,
-} from './utils/tasks_utils';
+import { init_tasks_table, get_tasks } from './utils/tasks_utils';
+import { Task } from './types/Task';
 
 const app = express();
 app.use(cors());
@@ -26,6 +25,12 @@ const pool = new Pool({
     database: DB_NAME,
     port: DB_PORT,
     idleTimeoutMillis: 30000,
+});
+
+// GET all Tasks
+app.get('/tasks', async (req: Request, res: Response) => {
+    const tasks: Task[] = await get_tasks(pool);
+    res.status(200).json(tasks);
 });
 
 // Handle request for non-existent routes

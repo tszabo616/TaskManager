@@ -1,5 +1,6 @@
 import fs from 'fs';
 import { Pool } from 'pg';
+import { Task } from '../types/Task';
 
 const DB_NAME = process.env.DB_NAME;
 
@@ -34,5 +35,16 @@ export async function init_tasks_table(pool: Pool) {
         } catch (err) {
             console.error('Error reading file:', err);
         }
+    }
+}
+
+export async function get_tasks(pool: Pool): Promise<Task[]> {
+    try {
+        const result = await pool.query(
+            'SELECT * FROM public.tasks ORDER BY id ASC'
+        );
+        return result.rows;
+    } catch (err) {
+        return [];
     }
 }
