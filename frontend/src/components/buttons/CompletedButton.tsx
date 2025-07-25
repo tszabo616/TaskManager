@@ -26,7 +26,7 @@ export default function CompletedButton({
             <Tooltip
                 id='completed-button'
                 style={{
-                    backgroundColor: 'rgba(87, 87, 87, 1)',
+                    backgroundColor: 'rgb(87, 87, 87)',
                     color: '#F5F5F5',
                     padding: '8px',
                 }}

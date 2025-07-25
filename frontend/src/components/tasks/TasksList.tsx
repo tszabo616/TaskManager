@@ -41,15 +41,17 @@ export default function TasksList() {
 
             {isLoading ? <Loading /> : null}
 
-            {!isLoading && tasks.length
-                ? tasks.map(el => (
-                      <TaskItem
-                          key={`task-item-${el.id}`}
-                          id={el.id || 0}
-                          title={el.title || ''}
-                      />
-                  ))
-                : <NoTasks />}
+            {!isLoading && tasks.length ? (
+                tasks.map(el => (
+                    <TaskItem
+                        key={`task-item-${el.id}`}
+                        id={el.id || 0}
+                        title={el.title || ''}
+                    />
+                ))
+            ) : (
+                <NoTasks />
+            )}
         </div>
     );
 }

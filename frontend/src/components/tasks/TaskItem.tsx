@@ -7,6 +7,8 @@ import classes from './TaskItem.module.css';
 import DeleteButton from '../buttons/DeleteButton';
 import ConfirmModal from '../modals/ConfirmModal';
 import CompletedButton from '../buttons/CompletedButton';
+import EditButton from '../buttons/EditButton';
+import EditModal from '../modals/EditModal';
 
 const env = import.meta.env;
 
@@ -20,6 +22,7 @@ export default function TaskItem({ id, title = '' }: TaskItemProps) {
     const [isConfirmModalShown, setIsConfirmModalShown] = useState(false);
     const [isConfirmLoading, setIsConfirmLoading] = useState(false);
     const [hasConfirmError, setHasConfirmError] = useState(false);
+    const [isEditModalShown, setIsEditModalShown] = useState(false);
 
     function handleComplete() {
         const url = `${env.VITE_BE_URL}/tasks/${id}`;
@@ -96,6 +99,14 @@ export default function TaskItem({ id, title = '' }: TaskItemProps) {
         setIsConfirmModalShown(true);
     }
 
+    function handleCloseEditModal() {
+        setIsEditModalShown(false);
+    }
+
+    function handleShowEditModal() {
+        setIsEditModalShown(true);
+    }
+
     return (
         <div className={classes.container}>
             {isConfirmModalShown && (
@@ -107,10 +118,17 @@ export default function TaskItem({ id, title = '' }: TaskItemProps) {
                     hasError={hasConfirmError}
                 />
             )}
-
+            {isEditModalShown && (
+                <EditModal
+                    id={parseInt(`${id}`)}
+                    onClose={handleCloseEditModal}
+                    title={title}
+                />
+            )}
             <p className={classes.title}>{title}</p>
             <div className={classes.buttonsContainer}>
                 <CompletedButton onClick={handleComplete} />
+                <EditButton onClick={handleShowEditModal} />
                 <DeleteButton onClick={handleShowConfirmModal} />
             </div>
         </div>

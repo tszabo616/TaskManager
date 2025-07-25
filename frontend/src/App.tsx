@@ -1,4 +1,3 @@
-import './App.css';
 import MainNavigation from './components/navigation/MainNavigation';
 import TasksList from './components/tasks/TasksList';
 import { TasksContextProvider } from './store/TasksContextProvider';
