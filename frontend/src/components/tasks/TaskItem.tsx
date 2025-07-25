@@ -6,6 +6,7 @@ import { TasksContext } from '../../store/TasksContext';
 import classes from './TaskItem.module.css';
 import DeleteButton from '../buttons/DeleteButton';
 import ConfirmModal from '../modals/ConfirmModal';
+import CompletedButton from '../buttons/CompletedButton';
 
 const env = import.meta.env;
 
@@ -19,6 +20,41 @@ export default function TaskItem({ id, title = '' }: TaskItemProps) {
     const [isConfirmModalShown, setIsConfirmModalShown] = useState(false);
     const [isConfirmLoading, setIsConfirmLoading] = useState(false);
     const [hasConfirmError, setHasConfirmError] = useState(false);
+
+    function handleComplete() {
+        const url = `${env.VITE_BE_URL}/tasks/${id}`;
+        const bodyObj = {
+            is_completed: true,
+        };
+        fetch(url, {
+            method: 'PUT',
+            body: JSON.stringify(bodyObj),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(res => {
+                if (res.ok) {
+                    tasksCtx?.getTasks(
+                        () => {},
+                        () => {}
+                    );
+                } else {
+                    return res.json().then(data => {
+                        const err = 'Error!';
+                        // setErrorMessage(err);
+                        if (data && data.error) {
+                            console.log(data);
+                            // setErrorMessage(data.error);
+                        }
+                        throw new Error(err);
+                    });
+                }
+            })
+            .catch(() => {
+                // setIsConfirmLoading(false);
+            });
+    }
 
     function handleDelete(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -74,6 +110,7 @@ export default function TaskItem({ id, title = '' }: TaskItemProps) {
 
             <p className={classes.title}>{title}</p>
             <div className={classes.buttonsContainer}>
+                <CompletedButton onClick={handleComplete} />
                 <DeleteButton onClick={handleShowConfirmModal} />
             </div>
         </div>
