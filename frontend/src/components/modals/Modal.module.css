@@ -41,3 +41,9 @@
     color: white;
     margin: 0;
 }
+
+.errorContainer {
+    display: flex;
+    flex: row;
+    justify-content: center;
+}

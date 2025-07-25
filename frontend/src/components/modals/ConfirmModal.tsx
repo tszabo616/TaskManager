@@ -3,7 +3,7 @@ import type { FormEvent } from 'react';
 
 import classes from './Modal.module.css';
 import Button from '../buttons/Button';
-import Modal from './BaseModal';
+import BaseModal from './BaseModal';
 import ErrorLabel from '../ui/ErrorLabel';
 import Loading from '../ui/Loading';
 
@@ -23,11 +23,15 @@ export default function ConfirmModal({
     title = '',
 }: ConfirmModalProps) {
     return (
-        <Modal onClose={onClose}>
+        <BaseModal onClose={onClose}>
             <form className={classes.Form} onSubmit={onSubmit}>
                 <h1>{title}</h1>
                 {hasError && (
-                    <ErrorLabel>Something went wrong. Try again.</ErrorLabel>
+                    <div className={classes.errorContainer}>
+                        <ErrorLabel>
+                            Something went wrong. Try again.
+                        </ErrorLabel>
+                    </div>
                 )}
                 {!isLoading && (
                     <Button type='submit' onClick={() => {}}>
@@ -36,7 +40,7 @@ export default function ConfirmModal({
                 )}
                 {isLoading && <Loading />}
             </form>
-        </Modal>
+        </BaseModal>
     );
 }
 

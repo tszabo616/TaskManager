@@ -39,7 +39,7 @@ interface ModalProps {
     children: JSX.Element | string | number;
 }
 
-const Modal = ({ onClose, children='' }: ModalProps) => {
+const BaseModal = ({ onClose, children='' }: ModalProps) => {
   return (
     <>
       {ReactDOM.createPortal(<Backdrop onClose={onClose} />, portalElement)}
@@ -51,9 +51,9 @@ const Modal = ({ onClose, children='' }: ModalProps) => {
   );
 };
 
-Modal.propTypes = {
+BaseModal.propTypes = {
     onClose: PropTypes.func.isRequired,
     children: PropTypes.any
 };
 
-export default Modal;
+export default BaseModal;
