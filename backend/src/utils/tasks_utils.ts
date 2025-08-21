@@ -22,7 +22,7 @@ export async function init_tasks_table(pool: Pool) {
     if (!tasks_exists) {
         try {
             const sql = fs.readFileSync(
-                './db_scripts/create_tasks.sql',
+                './db_scripts/create_tasks_table.sql',
                 'utf8'
             );
             await pool.query(sql);
